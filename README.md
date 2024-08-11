@@ -13,7 +13,7 @@ TODO:
 
 Currently the function `open_in_browser` in `main.rs` expect [carbonyl](https://github.com/fathyb/carbonyl) under the  `carbonyl-0.0.3` folder, it can be replaced with `lynx` but there's some issue with delay of input after returning from the screen until it catch up...
 
-** Screenshot **
+Screenshot 
 ==
 ![main screen](screenshot/main_screen.png)
 
