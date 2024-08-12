@@ -107,7 +107,8 @@ impl HackerNews {
             let _ = self.fill_stories().await?;
         }
         let stories_id = STORIES_ID.load();
-        if from < stories_id.len() && to < stories_id.len() {
+        let to = std::cmp::min(stories_id.len(), to);
+        if from < stories_id.len() {
             Ok(join_all(
                 stories_id[from..to]
                     .iter()

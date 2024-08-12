@@ -35,7 +35,7 @@ async fn run() -> Result<()> {
             let _ = tx_stories.send(msg);
         }
     });
-
+    let mut story_max = 50;
     loop {
         t.draw(|f| {
             ui::main(f, &app);
@@ -43,6 +43,17 @@ async fn run() -> Result<()> {
 
         if let Some(action) = action_rx.recv().await {
             match app.update(action) {
+                Action::FetchMore => {
+                    story_max += 5;
+                    let fetchy = app.fetcher.clone();
+                    let tx_stories = app.action_tx.clone();
+                    let _fetch_stories = tokio::spawn(async move {
+                        if let Ok(stories) = fetchy.get_stories_from_to(0, story_max).await {
+                            let msg = Action::Stories(stories);
+                            let _ = tx_stories.send(msg);
+                        }
+                    });
+                }
                 Action::OpenNext(url) => {
                     {
                         let mut listen_lock = app.listen_to_key.lock().unwrap();

@@ -12,6 +12,7 @@ pub enum Action {
     ReadStory,
     Stories(Vec<StoryItem>),
     OpenNext(String),
+    FetchMore,
 }
 
 pub struct App {
@@ -31,8 +32,10 @@ impl App {
 
     pub fn load_stories(&mut self, stories: Vec<StoryItem>) {
         self.stories = stories.clone();
-        self.stories_state = ListState::default();
-        self.stories_state.select_first();
+        if self.stories_state.selected() == None {
+            self.stories_state.select_first();
+        }
+        
         self.show_loading = false;
     }
 
@@ -40,7 +43,16 @@ impl App {
         match msg {
             Action::Stories(stories) => self.load_stories(stories),
             Action::Quit => self.set_should_quit(),
-            Action::NextStory => self.stories_state.select_next(),
+            Action::NextStory => {
+                if self.stories_state.selected().unwrap() + 1 < self.stories.len() {
+                    self.stories_state.select_next();
+                }
+                if self.stories_state.selected().unwrap() + 5 > self.stories.len() {
+                    return Action::FetchMore;
+                } else {
+                    return Action::None;
+                };
+            }
             Action::PrevStory => self.stories_state.select_previous(),
             Action::ReadStory => {
                 if let Some(story_index) = self.stories_state.selected() {
