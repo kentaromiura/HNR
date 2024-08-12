@@ -1,6 +1,8 @@
 # HNR
 Hacker News Cli reader
 
+![demo gif](screenshot/demo.gif)
+
 As I was getting rusty at writing rust code I've decided to make a little CLI program to read Hacker News
 it features ratatui for cli, asynchronous programming with lazy load of news
 
